@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rob’s Gym — Classes</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">ROB’S GYM</div>
+    <nav class="main-nav">
+      <a href="Main.html">About</a>
+      <a href="register.html">JOIN</a>
+      <a href="index.html" class="active">Classes</a>
+    </nav>
+    <button class="toggle" id="modeToggle" type="button">☾</button>
+  </header>
+
+  <main class="classes-page">
+    <section class="classes-hero card">
+      <h1 class="big">Find Your Perfect Class</h1>
+      <p class="sub" id="statusText">Pick a class and trainer to get started.</p>
+
+      <div class="filters">
+        <select id="classSelect">
+          <option value="">Select a Class</option>
+          <option>Yoga Flow</option>
+          <option>Pilates Core</option>
+          <option>HIIT Power</option>
+          <option>Boxing Fundamentals</option>
+          <option>Kickboxing</option>
+          <option>Strength Training</option>
+          <option>CrossFit Conditioning</option>
+          <option>Cardio Blast</option>
+          <option>Spin Class</option>
+          <option>Zumba Dance</option>
+          <option>Body Sculpt</option>
+          <option>Stretch & Recovery</option>
+          <option>Bootcamp</option>
+          <option>Beginner Weightlifting</option>
+          <option>Powerlifting</option>
+          <option>Athletic Performance</option>
+        </select>
+
+        <select id="trainerSelect">
+          <option value="">Select a Trainer</option>
+          <option>Trainer Rob</option>
+          <option>Trainer Mia</option>
+          <option>Trainer Lee</option>
+          <option>Trainer Evo</option>
+          <option>Trainer Ana</option>
+          <option>Trainer Max</option>
+          <option>Trainer Sara</option>
+          <option>Trainer Chris</option>
+          <option>Trainer Jade</option>
+          <option>Trainer Luis</option>
+        </select>
+
+        <button class="btn-solid" id="joinBtn" type="button">Join Now</button>
+      </div>
+
+      <table class="mini-table" id="classTable">
+        <thead><tr><th>Class</th><th>Trainer</th></tr></thead>
+        <tbody>
+          <tr data-class="Yoga Flow" data-trainer="Trainer Ana"><td>Yoga Flow</td><td>Trainer Ana</td></tr>
+          <tr data-class="HIIT Power" data-trainer="Trainer Rob"><td>HIIT Power</td><td>Trainer Rob</td></tr>
+          <tr data-class="Boxing Fundamentals" data-trainer="Trainer Lee"><td>Boxing Fundamentals</td><td>Trainer Lee</td></tr>
+          <tr data-class="Spin Class" data-trainer="Trainer Sara"><td>Spin Class</td><td>Trainer Sara</td></tr>
+          <tr data-class="Strength Training" data-trainer="Trainer Chris"><td>Strength Training</td><td>Trainer Chris</td></tr>
+          <tr data-class="Zumba Dance" data-trainer="Trainer Jade"><td>Zumba Dance</td><td>Trainer Jade</td></tr>
+        </tbody>
+      </table>
+
+      <div class="book-row">
+        <button class="btn-ghost" id="bookBtn1" type="button">Book</button>
+        <button class="btn-ghost" id="bookBtn2" type="button">Book</button>
+      </div>
+
+      <div class="card-row" id="tileRow">
+        <div class="img-frame placeholder small tile" data-placeholder="Yoga" data-class="Yoga Flow">
+          <img src="https://images.pexels.com/photos/8436587/pexels-photo-8436587.jpeg" alt="Yoga class image" />
+        </div>
+        <div class="img-frame placeholder small tile" data-placeholder="HIIT" data-class="HIIT Power">
+          <img src="https://cdn.prod.website-files.com/66c501d753ae2a8c705375b6/67f015f86c56dd790c22570c_67e4045fb70b66b4c16f33fb_AF_HERO_HIITWorkoutPlanForMuscleGain%2520(1).jpeg" alt="HIIT workout image" />
+        </div>
+        <div class="img-frame placeholder small tile" data-placeholder="Boxing" data-class="Boxing Fundamentals">
+          <img src="https://t4.ftcdn.net/jpg/01/17/70/97/360_F_117709725_LatS9IhbhPjgRE16Ab2cWfqg3dNrsC63.jpg" alt="Boxing class image" />
+        </div>
+      </div>
+
+      <div class="divider"></div>
+      <a class="cta-outline" id="memberCta" href="register.html">Become a Member Today</a>
+    </section>
+
+    <section class="workout-generator card">
+      <h2>Workout of the Day</h2>
+      <p id="workoutDisplay">Click the button to generate your workout.</p>
+      <button class="btn-solid" id="wodBtn" type="button">Get Workout</button>
+    </section>
+
+    <footer class="site-footer">© 2024 Rob’s Gym</footer>
+  </main>
+
+  <script>
+    function toast(msg) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.position = 'fixed';
+        t.style.left = '50%';
+        t.style.bottom = '18px';
+        t.style.transform = 'translateX(-50%)';
+        t.style.padding = '10px 14px';
+        t.style.borderRadius = '10px';
+        t.style.background = 'rgba(0,0,0,.75)';
+        t.style.color = '#fff';
+        t.style.fontWeight = '700';
+        t.style.opacity = '0';
+        t.style.transition = 'opacity .2s ease';
+        t.style.zIndex = '9999';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.style.opacity = '0', 900);
+    }
+
+    if (localStorage.getItem('mode') === 'dark') document.body.classList.add('dark');
+    const modeToggle = document.getElementById('modeToggle');
+    modeToggle.textContent = document.body.classList.contains('dark') ? '☀' : '☾';
+    modeToggle.onclick = () => {
+      document.body.classList.toggle('dark');
+      const dark = document.body.classList.contains('dark');
+      modeToggle.textContent = dark ? '☀' : '☾';
+      localStorage.setItem('mode', dark ? 'dark' : 'light');
+      toast(dark ? 'Dark mode on' : 'Light mode on');
+    };
+
+    const classSelect = document.getElementById('classSelect');
+    const trainerSelect = document.getElementById('trainerSelect');
+    const joinBtn = document.getElementById('joinBtn');
+    const statusText = document.getElementById('statusText');
+    const table = document.getElementById('classTable');
+    const memberCta = document.getElementById('memberCta');
+
+    function updateStatus() {
+      const c = classSelect.value.trim();
+      const t = trainerSelect.value.trim();
+      if (c && t) statusText.textContent = `Selected: ${c} with ${t}`;
+      else if (c) statusText.textContent = `Selected class: ${c}`;
+      else if (t) statusText.textContent = `Selected trainer: ${t}`;
+      else statusText.textContent = `Pick a class and trainer to get started.`;
+    }
+
+    function clearRowHighlights() {
+      table.querySelectorAll('tbody tr').forEach(r => r.style.outline = '');
+    }
+
+    function highlightRowBySelection() {
+      clearRowHighlights();
+      const c = classSelect.value.trim();
+      const t = trainerSelect.value.trim();
+      table.querySelectorAll('tbody tr').forEach(r => {
+        if (r.dataset.class === c && r.dataset.trainer === t) {
+          r.style.outline = '3px solid #ff6b17';
+        }
+      });
+    }
+
+    function goRegister() {
+      const c = classSelect.value.trim();
+      const t = trainerSelect.value.trim();
+      if (!c || !t) {
+        toast('Pick a class AND trainer first.');
+        return;
+      }
+      toast('Taking you to registration…');
+      const url = new URL('register.html', location.href);
+      url.searchParams.set('class', c);
+      url.searchParams.set('trainer', t);
+      setTimeout(() => location.href = url.toString(), 350);
+    }
+
+    classSelect.addEventListener('change', () => {
+      toast(classSelect.value ? `Class: ${classSelect.value}` : 'Class cleared');
+      updateStatus();
+      highlightRowBySelection();
+    });
+
+    trainerSelect.addEventListener('change', () => {
+      toast(trainerSelect.value ? `Trainer: ${trainerSelect.value}` : 'Trainer cleared');
+      updateStatus();
+      highlightRowBySelection();
+    });
+
+    joinBtn.addEventListener('click', goRegister);
+
+    memberCta.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (!classSelect.value || !trainerSelect.value) {
+        toast('Choose a class and trainer, then Join Now.');
+        return;
+      }
+      goRegister();
+    });
+
+    table.querySelectorAll('tbody tr').forEach(row => {
+      row.style.cursor = 'pointer';
+      row.addEventListener('click', () => {
+        classSelect.value = row.dataset.class;
+        trainerSelect.value = row.dataset.trainer;
+        toast(`Selected ${row.dataset.class} with ${row.dataset.trainer}`);
+        updateStatus();
+        highlightRowBySelection();
+      });
+    });
+
+    document.getElementById('bookBtn1').addEventListener('click', () => {
+      if (!classSelect.value) classSelect.value = 'HIIT Power';
+      if (!trainerSelect.value) trainerSelect.value = 'Trainer Rob';
+      toast('Booked! Opening registration…');
+      updateStatus();
+      highlightRowBySelection();
+      goRegister();
+    });
+
+    document.getElementById('bookBtn2').addEventListener('click', () => {
+      if (!classSelect.value) classSelect.value = 'Yoga Flow';
+      if (!trainerSelect.value) trainerSelect.value = 'Trainer Ana';
+      toast('Booked! Opening registration…');
+      updateStatus();
+      highlightRowBySelection();
+      goRegister();
+    });
+
+    document.querySelectorAll('.tile').forEach(tile => {
+      tile.style.cursor = 'pointer';
+      tile.addEventListener('click', () => {
+        const c = tile.dataset.class;
+        classSelect.value = c;
+        toast(`Class selected: ${c}`);
+        updateStatus();
+        highlightRowBySelection();
+      });
+    });
+
+    const wodBtn = document.getElementById('wodBtn');
+    const workoutDisplay = document.getElementById('workoutDisplay');
+
+    wodBtn.addEventListener('click', () => {
+      const workouts = [
+        { name: "HIIT", moves: ["Burpees", "Jump Squats", "Plank", "Mountain Climbers"] },
+        { name: "Strength", moves: ["Push-ups", "Rows", "Lunges", "Deadlifts"] },
+        { name: "Cardio", moves: ["Jump Rope", "Running", "Cycling", "Rowing"] },
+        { name: "Boxing", moves: ["Jabs", "Hooks", "Uppercuts", "Footwork"] },
+        { name: "Yoga", moves: ["Down Dog", "Cobra", "Warrior II", "Bridge"] }
+      ];
+
+      const pick = workouts[Math.floor(Math.random() * workouts.length)];
+      let routine = "";
+
+      for (let i = 0; i < pick.moves.length; i++) {
+        const reps = (i % 2 === 0) ? "3 sets" : "30 seconds";
+        routine += `${i + 1}. ${pick.moves[i]} — ${reps}<br>`;
+      }
+
+      workoutDisplay.innerHTML = `<strong>${pick.name} Routine</strong><br>${routine}`;
+      toast('Workout generated!');
+    });
+
+    updateStatus();
+  </script>
+</body>
+</html>
