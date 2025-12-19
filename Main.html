@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rob’s Gym — Home</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">ROB’S GYM</div>
+    <nav class="main-nav">
+      <a href="Main.html" class="active">ABOUT</a>
+      <a href="index.html">CLASSES</a>
+      <a href="register.html">CONTACT</a>
+    </nav>
+    <button class="toggle" id="modeToggle" type="button">☾</button>
+  </header>
+
+  <main class="home">
+    <section class="hero">
+      <div class="carousel" id="heroCarousel">
+        <div class="slide active"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFpGiVaMuAKWH2g_Fc2duu-hRUFIDE0Peq5A&s">
+        
+      
+        <div class="dots" id="dotWrap"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h1 class="big">Find Your Perfect Class</h1>
+      <p class="sub">From Yoga to full—choose your favorite workout</p>
+
+      <div class="filters">
+        <select id="homeClassSelect">
+          <option value="">Select Class</option>
+          <option>Yoga Flow</option>
+          <option>HIIT Power</option>
+          <option>Boxing Fundamentals</option>
+          <option>Strength Training</option>
+          <option>Spin Class</option>
+          <option>Zumba Dance</option>
+          <option>Bootcamp</option>
+        </select>
+
+        <select id="homeTrainerSelect">
+          <option value="">Select Trainer</option>
+          <option>Evo</option>
+          <option>Rob</option>
+          <option>Mia</option>
+          <option>Chris</option>
+          <option>Ana</option>
+        </select>
+
+        <button class="btn-solid" id="homeJoinBtn" type="button">Join Now</button>
+      </div>
+
+      <p id="homeResult"></p>
+    </section>
+
+    <section class="triptych">
+      <div class="tri-item">
+        <h3>OUR MISSION</h3>
+        <p>Motivate every member to reach their goals.</p>
+        <a href="register.html" class="btn-orange joinLink">Join Now</a>
+      </div>
+      <div class="tri-item">
+        <h3>OUR VISION</h3>
+        <p>Build a strong fitness community.</p>
+        <a href="register.html" class="btn-orange joinLink">Join Now</a>
+      </div>
+      <div class="tri-item">
+        <h3>OUR VALUES</h3>
+        <p>Consistency, effort, and teamwork.</p>
+        <a href="register.html" class="btn-orange joinLink">Join Now</a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function toast(msg) {
+      let t = document.getElementById('toast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'toast';
+        t.style.position = 'fixed';
+        t.style.left = '50%';
+        t.style.bottom = '18px';
+        t.style.transform = 'translateX(-50%)';
+        t.style.padding = '10px 14px';
+        t.style.borderRadius = '10px';
+        t.style.background = 'rgba(0,0,0,.75)';
+        t.style.color = '#fff';
+        t.style.fontWeight = '700';
+        t.style.opacity = '0';
+        t.style.transition = 'opacity .2s ease';
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.opacity = '1';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.style.opacity = '0', 900);
+    }
+
+    if (localStorage.getItem('mode') === 'dark') document.body.classList.add('dark');
+    const modeToggle = document.getElementById('modeToggle');
+    modeToggle.textContent = document.body.classList.contains('dark') ? '☀' : '☾';
+    modeToggle.onclick = () => {
+      document.body.classList.toggle('dark');
+      const dark = document.body.classList.contains('dark');
+      modeToggle.textContent = dark ? '☀' : '☾';
+      localStorage.setItem('mode', dark ? 'dark' : 'light');
+      toast(dark ? 'Dark mode on' : 'Light mode on');
+    };
+
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.getElementById('dotWrap');
+    let index = 0;
+
+    function showSlide() {
+      slides.forEach((s,i)=>s.classList.toggle('active',i===index));
+      dots.innerHTML = '';
+      slides.forEach((_,i)=>{
+        const b=document.createElement('button');
+        b.className='dot'+(i===index?' active':'');
+        b.onclick=()=>{index=i;showSlide();};
+        dots.appendChild(b);
+      });
+    }
+    document.getElementById('prevBtn').onclick=()=>{index=(index-1+slides.length)%slides.length;showSlide();};
+    document.getElementById('nextBtn').onclick=()=>{index=(index+1)%slides.length;showSlide();};
+    showSlide();
+
+    document.querySelectorAll('.joinLink').forEach(link=>{
+      link.onclick=e=>{
+        e.preventDefault();
+        toast('Going to registration…');
+        setTimeout(()=>location.href=link.href,300);
+      };
+    });
+
+    const homeClass = document.getElementById('homeClassSelect');
+    const homeTrainer = document.getElementById('homeTrainerSelect');
+    const homeJoinBtn = document.getElementById('homeJoinBtn');
+    const homeResult = document.getElementById('homeResult');
+
+    homeJoinBtn.onclick = () => {
+      if (!homeClass.value || !homeTrainer.value) {
+        toast('Please select a class and a trainer');
+        return;
+      }
+
+      homeResult.textContent = `You selected ${homeClass.value} with Trainer ${homeTrainer.value}.`;
+      toast('Selection saved');
+
+      const url = new URL('register.html', location.href);
+      url.searchParams.set('class', homeClass.value);
+      url.searchParams.set('trainer', homeTrainer.value);
+
+      setTimeout(()=>location.href=url.toString(),400);
+    };
+  </script>
+</body>
+</html>
+
+
